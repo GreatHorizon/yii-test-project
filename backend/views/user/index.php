@@ -30,11 +30,12 @@ $this->params['breadcrumbs'][] = $this->title;
             ['class' => 'yii\grid\SerialColumn'],
             [
                 'attribute' => 'userId',
-                'label' => 'ID'
+                'label' => 'ID',
             ],
             [
                 'attribute' => 'username',
                 'label' => 'Имя пользователя'
+
             ],
             [
                 'attribute' => 'email',
