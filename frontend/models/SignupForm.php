@@ -2,6 +2,7 @@
 
 namespace frontend\models;
 
+use DateTimeImmutable;
 use Yii;
 use yii\base\Model;
 use common\models\User;
@@ -53,6 +54,9 @@ class SignupForm extends Model
         $user->username = $this->username;
         $user->email = $this->email;
         $user->setPassword($this->password);
+        $date = new DateTimeImmutable();
+        $user->created_at = $date->getTimestamp();
+        $user->updated_at = $date->getTimestamp();
         $user->generateAuthKey();
         $user->generateEmailVerificationToken();
 

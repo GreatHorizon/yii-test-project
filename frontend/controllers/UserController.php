@@ -2,10 +2,12 @@
 
 namespace frontend\controllers;
 
-class PostController extends \yii\rest\ActiveController
+use yii\rest\ActiveController;
+
+class UserController extends ActiveController
 {
 
-    public $modelClass = 'backend\models\Post';
+    public $modelClass = 'common\models\User';
 
     public function actionIndex()
     {
