@@ -20,7 +20,7 @@ class ContactForm extends Model
     /**
      * {@inheritdoc}
      */
-    public function rules()
+    public function rules(): array
     {
         return [
             // name, email, subject and body are required
