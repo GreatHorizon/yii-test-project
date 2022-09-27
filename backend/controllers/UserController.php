@@ -4,6 +4,7 @@ namespace backend\controllers;
 
 use common\models\User;
 use backend\models\UserSearch;
+use DateTimeImmutable;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -13,6 +14,7 @@ use yii\filters\VerbFilter;
  */
 class UserController extends Controller
 {
+
     /**
      * @inheritDoc
      */
@@ -70,8 +72,20 @@ class UserController extends Controller
         $model = new User();
 
         if ($this->request->isPost) {
-            if ($model->load($this->request->post()) && $model->save()) {
-                return $this->redirect(['view', 'userId' => $model->userId]);
+            if ($model->load($this->request->post())) {
+                $model->generateAuthKey();
+                $model->setPassword('qwerty123');
+                $model->status = User::STATUS_ACTIVE;
+
+                $date = new DateTimeImmutable();
+                $model->created_at = $date->getTimestamp();
+                $model->updated_at = $date->getTimestamp();
+                $model->generateEmailVerificationToken();
+
+                if ($model->save()) {
+                    return $this->redirect(['view', 'userId' => $model->userId]);
+                }
+
             }
         } else {
             $model->loadDefaultValues();

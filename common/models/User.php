@@ -32,7 +32,7 @@ class User extends ActiveRecord implements IdentityInterface
     /**
      * {@inheritdoc}
      */
-    public static function tableName()
+    public static function tableName(): string
     {
         return 'user';
     }
@@ -45,7 +45,7 @@ class User extends ActiveRecord implements IdentityInterface
     /**
      * {@inheritdoc}
      */
-    public function rules()
+    public function rules(): array
     {
         return [
             [['username', 'auth_key', 'password_hash', 'email'], 'required'],
@@ -61,7 +61,7 @@ class User extends ActiveRecord implements IdentityInterface
     /**
      * {@inheritdoc}
      */
-    public function attributeLabels()
+    public function attributeLabels(): array
     {
         return [
             'userId' => 'User ID',
@@ -82,7 +82,7 @@ class User extends ActiveRecord implements IdentityInterface
      *
      * @return ActiveQuery
      */
-    public function getPosts()
+    public function getPosts(): ActiveQuery
     {
         return $this->hasMany(Post::class, ['authorId' => 'userId']);
     }
@@ -95,7 +95,7 @@ class User extends ActiveRecord implements IdentityInterface
     /**
      * {@inheritdoc}
      */
-    public static function findIdentityByAccessToken($token, $type = null)
+    public static function findIdentityByAccessToken($token, $type = null): ?IdentityInterface
     {
         throw new NotSupportedException('"findIdentityByAccessToken" is not implemented.');
     }
@@ -105,16 +105,25 @@ class User extends ActiveRecord implements IdentityInterface
         return Yii::$app->security->validatePassword($password, $this->password_hash);
     }
 
+    /**
+     * @throws \yii\base\Exception
+     */
     public function setPassword($password)
     {
         $this->password_hash = Yii::$app->security->generatePasswordHash($password);
     }
 
+    /**
+     * @throws \yii\base\Exception
+     */
     public function generateEmailVerificationToken()
     {
         $this->verification_token = Yii::$app->security->generateRandomString() . '_' . time();
     }
 
+    /**
+     * @throws \yii\base\Exception
+     */
     public function generateAuthKey()
     {
         $this->auth_key = Yii::$app->security->generateRandomString();
@@ -140,6 +149,18 @@ class User extends ActiveRecord implements IdentityInterface
     public function validateAuthKey($authKey): ?bool
     {
         return $this->getAuthKey() === $authKey;
+    }
+
+    public function fields()
+    {
+        $fields = parent::fields();
+
+        unset(
+            $fields['auth_key'], $fields['password_hash'],
+            $fields['password_reset_token'], $fields['verification_token'],
+        );
+
+        return $fields;
     }
 
 }
