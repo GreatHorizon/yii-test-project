@@ -2,7 +2,7 @@
 
 namespace backend\controllers;
 
-use app\models\Post;
+use backend\models\Post;
 use backend\models\PostSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
