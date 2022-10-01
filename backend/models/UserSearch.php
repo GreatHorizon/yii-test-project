@@ -7,18 +7,18 @@ use yii\data\ActiveDataProvider;
 use common\models\User;
 
 /**
- * UserSearch represents the model behind the search form of `app\models\User`.
+ * UserSearch represents the model behind the search form of `common\models\User`.
  */
 class UserSearch extends User
 {
     /**
      * {@inheritdoc}
      */
-    public function rules() : array
+    public function rules()
     {
         return [
-            [['userId', 'status', 'created_at', 'updated_at'], 'integer'],
-            [['username', 'auth_key', 'password_hash', 'password_reset_token', 'email', 'verification_token'], 'safe'],
+            [['userId', 'status', 'createdAt', 'updatedAt'], 'integer'],
+            [['username', 'authKey', 'passwordHash', 'passwordResetToken', 'email', 'verificationToken'], 'safe'],
         ];
     }
 
@@ -60,16 +60,16 @@ class UserSearch extends User
         $query->andFilterWhere([
             'userId' => $this->userId,
             'status' => $this->status,
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
+            'createdAt' => $this->createdAt,
+            'updatedAt' => $this->updatedAt,
         ]);
 
         $query->andFilterWhere(['like', 'username', $this->username])
-            ->andFilterWhere(['like', 'auth_key', $this->auth_key])
-            ->andFilterWhere(['like', 'password_hash', $this->password_hash])
-            ->andFilterWhere(['like', 'password_reset_token', $this->password_reset_token])
+            ->andFilterWhere(['like', 'authKey', $this->authKey])
+            ->andFilterWhere(['like', 'passwordHash', $this->passwordHash])
+            ->andFilterWhere(['like', 'passwordResetToken', $this->passwordResetToken])
             ->andFilterWhere(['like', 'email', $this->email])
-            ->andFilterWhere(['like', 'verification_token', $this->verification_token]);
+            ->andFilterWhere(['like', 'verificationToken', $this->verificationToken]);
 
         return $dataProvider;
     }

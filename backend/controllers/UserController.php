@@ -4,7 +4,6 @@ namespace backend\controllers;
 
 use common\models\User;
 use backend\models\UserSearch;
-use DateTimeImmutable;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -14,7 +13,6 @@ use yii\filters\VerbFilter;
  */
 class UserController extends Controller
 {
-
     /**
      * @inheritDoc
      */
@@ -51,7 +49,7 @@ class UserController extends Controller
 
     /**
      * Displays a single User model.
-     * @param int $userId User ID
+     * @param int $userId ID пользователя
      * @return string
      * @throws NotFoundHttpException if the model cannot be found
      */
@@ -72,20 +70,8 @@ class UserController extends Controller
         $model = new User();
 
         if ($this->request->isPost) {
-            if ($model->load($this->request->post())) {
-                $model->generateAuthKey();
-                $model->setPassword('qwerty123');
-                $model->status = User::STATUS_ACTIVE;
-
-                $date = new DateTimeImmutable();
-                $model->created_at = $date->getTimestamp();
-                $model->updated_at = $date->getTimestamp();
-                $model->generateEmailVerificationToken();
-
-                if ($model->save()) {
-                    return $this->redirect(['view', 'userId' => $model->userId]);
-                }
-
+            if ($model->load($this->request->post()) && $model->save()) {
+                return $this->redirect(['view', 'userId' => $model->userId]);
             }
         } else {
             $model->loadDefaultValues();
@@ -99,7 +85,7 @@ class UserController extends Controller
     /**
      * Updates an existing User model.
      * If update is successful, the browser will be redirected to the 'view' page.
-     * @param int $userId User ID
+     * @param int $userId ID пользователя
      * @return string|\yii\web\Response
      * @throws NotFoundHttpException if the model cannot be found
      */
@@ -119,7 +105,7 @@ class UserController extends Controller
     /**
      * Deletes an existing User model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param int $userId User ID
+     * @param int $userId ID пользователя
      * @return \yii\web\Response
      * @throws NotFoundHttpException if the model cannot be found
      */
@@ -133,7 +119,7 @@ class UserController extends Controller
     /**
      * Finds the User model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param int $userId User ID
+     * @param int $userId ID пользователя
      * @return User the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */

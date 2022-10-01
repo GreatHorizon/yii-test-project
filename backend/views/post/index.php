@@ -1,6 +1,6 @@
 <?php
 
-use backend\models\Post;
+use common\models\Post;
 use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\grid\ActionColumn;
@@ -18,7 +18,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
-        <?= Html::a('Создать пост', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('Create Post', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
 
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
@@ -28,22 +28,11 @@ $this->params['breadcrumbs'][] = $this->title;
         'filterModel' => $searchModel,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
-            [
-                'attribute' => 'postId',
-                'label' => 'ID поста'
-            ],
-            [
-                'attribute' => 'authorId',
-                'label' => 'ID автора'
-            ],
-            [
-                'attribute' => 'title',
-                'label' => 'Название'
-            ],
-            [
-                'attribute' => 'text',
-                'label' => 'Текст'
-            ],
+
+            'postId',
+            'authorId',
+            'title',
+            'text:ntext',
             [
                 'class' => ActionColumn::className(),
                 'urlCreator' => function ($action, Post $model, $key, $index, $column) {

@@ -4,7 +4,7 @@ use yii\helpers\Html;
 use yii\widgets\DetailView;
 
 /** @var yii\web\View $this */
-/** @var app\models\User $model */
+/** @var common\models\User $model */
 
 $this->title = $model->userId;
 $this->params['breadcrumbs'][] = ['label' => 'Users', 'url' => ['index']];
@@ -16,11 +16,11 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
-        <?= Html::a('Изменить', ['update', 'userId' => $model->userId], ['class' => 'btn btn-primary']) ?>
-        <?= Html::a('Удалить', ['delete', 'userId' => $model->userId], [
+        <?= Html::a('Update', ['update', 'userId' => $model->userId], ['class' => 'btn btn-primary']) ?>
+        <?= Html::a('Delete', ['delete', 'userId' => $model->userId], [
             'class' => 'btn btn-danger',
             'data' => [
-                'confirm' => 'Вы уверены, что хотите удалить пользователя?',
+                'confirm' => 'Are you sure you want to delete this item?',
                 'method' => 'post',
             ],
         ]) ?>
@@ -31,14 +31,14 @@ $this->params['breadcrumbs'][] = $this->title;
         'attributes' => [
             'userId',
             'username',
-            'auth_key',
-            'password_hash',
-            'password_reset_token',
+            'authKey',
+            'passwordHash',
+            'passwordResetToken',
             'email:email',
             'status',
-            'created_at',
-            'updated_at',
-            'verification_token',
+            'createdAt',
+            'updatedAt',
+            'verificationToken',
         ],
     ]) ?>
 

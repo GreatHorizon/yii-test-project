@@ -1,8 +1,7 @@
 <?php
 
-namespace backend\models;
+namespace common\models;
 
-use common\models\User;
 use Yii;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
@@ -17,7 +16,7 @@ use yii\db\ActiveRecord;
  *
  * @property User $author
  */
-class Post extends ActiveRecord
+class BasePost extends ActiveRecord
 {
     /**
      * {@inheritdoc}

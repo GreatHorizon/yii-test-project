@@ -18,7 +18,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
-        <?= Html::a('Добавить пользователя', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('Create User', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
 
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
@@ -28,23 +28,17 @@ $this->params['breadcrumbs'][] = $this->title;
         'filterModel' => $searchModel,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
-            [
-                'attribute' => 'userId',
-                'label' => 'ID',
-            ],
-            [
-                'attribute' => 'username',
-                'label' => 'Имя пользователя'
 
-            ],
-            [
-                'attribute' => 'email',
-                'label' => 'Почта'
-            ],
-            [
-                'attribute' => 'status',
-                'label' => 'Статус'
-            ],
+            'userId',
+            'username',
+            'authKey',
+            'passwordHash',
+            'passwordResetToken',
+            //'email:email',
+            //'status',
+            //'createdAt',
+            //'updatedAt',
+            //'verificationToken',
             [
                 'class' => ActionColumn::className(),
                 'urlCreator' => function ($action, User $model, $key, $index, $column) {
