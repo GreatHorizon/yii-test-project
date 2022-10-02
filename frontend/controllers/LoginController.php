@@ -44,7 +44,7 @@ class LoginController extends Controller
             throw new MethodNotAllowedHttpException;
         }
     }
-    
+
     /**
      * @throws Exception
      */
@@ -78,7 +78,7 @@ class LoginController extends Controller
         $date = new DateTimeImmutable();
 
         $accessToken->userId = $userId;
-        $accessToken->token = Yii::$app->security->generateRandomString() . '_' . time();
+        $accessToken->token = AccessToken::generateToken();
         $accessToken->createdAt = $date->getTimestamp();
 
         return $accessToken;
