@@ -4,6 +4,7 @@ namespace common\models;
 
 use backend\models\Post;
 use Yii;
+use yii\base\Exception;
 use yii\web\IdentityInterface;
 
 /**
@@ -64,16 +65,25 @@ class User extends BaseUser implements IdentityInterface
         return Yii::$app->security->validatePassword($password, $this->passwordHash);
     }
 
+    /**
+     * @throws Exception
+     */
     public function setPassword($password)
     {
         $this->passwordHash = Yii::$app->security->generatePasswordHash($password);
     }
 
+    /**
+     * @throws Exception
+     */
     public function generateEmailVerificationToken()
     {
         $this->verificationToken = Yii::$app->security->generateRandomString() . '_' . time();
     }
 
+    /**
+     * @throws Exception
+     */
     public function generateAuthKey()
     {
         $this->authKey = Yii::$app->security->generateRandomString();
