@@ -3,9 +3,12 @@
 namespace frontend\controllers;
 
 use common\models\User;
-use yii\rest\ActiveController;
+use Yii;
+use yii\web\Controller;
+use yii\web\MethodNotAllowedHttpException;
+use yii\web\ServerErrorHttpException;
 
-class UserController extends ActiveController
+class UserController extends Controller
 {
 
     public function behaviors(): array
@@ -21,16 +24,34 @@ class UserController extends ActiveController
         return $behaviors;
     }
 
-    public $modelClass = 'common\models\User';
 
-    public function actionIndex(): string
+    /**
+     * @throws MethodNotAllowedHttpException
+     */
+    public function actionIndex(): array
     {
-        return $this->render('index');
+        $request = Yii::$app->request;
+
+        if ($request->isGet) {
+            return $this->getAllUsers($request);
+        } else {
+            throw new MethodNotAllowedHttpException;
+        }
     }
 
-    public function actionView($id)
-    {
-        return User::findIdentity($id);
+
+    /**
+     * @throws ServerErrorHttpException
+     */
+    private function getAllUsers($request) : array {
+        $accessToken = $request->get('accessToken');
+
+        if ($accessToken == null) {
+            throw new ServerErrorHttpException('AccessToken should not be empty');
+        }
+
+        return [];
     }
+
 
 }
