@@ -51,13 +51,8 @@ class UserController extends Controller
             throw new ServerErrorHttpException('AccessToken should not be empty');
         }
 
-        $users = [];
-
         $searchResult = User::find()->all();
-
-        if (empty($searchResult)) {
-          return [];
-        }
+        $users = [];
 
         foreach ($searchResult as $user) {
             ///Potentially polymorphic call. ActiveRecord does not have members in its hierarchy
