@@ -55,9 +55,15 @@ class User extends BaseUser implements IdentityInterface
         return static::findOne(['userId' => $id, 'status' => self::STATUS_ACTIVE]);
     }
 
-    public static function findIdentityByAccessToken($token, $type = null): ?IdentityInterface
+    public static function findIdentityByAccessToken($token, $type = null)
     {
-        throw new NotSupportedException('"findIdentityByAccessToken" is not implemented.');
+        $accessToken = AccessToken::findOne(['token' => $token]);
+
+        if ($accessToken == null) {
+            return null;
+        }
+
+        return $accessToken->getUser()->one();
     }
 
     public function validatePassword(string $password): bool
@@ -127,5 +133,4 @@ class User extends BaseUser implements IdentityInterface
             "updatedAt" => $this->updatedAt,
         ];
     }
-
 }

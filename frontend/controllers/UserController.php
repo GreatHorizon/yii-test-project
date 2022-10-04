@@ -60,6 +60,7 @@ class UserController extends Controller
         }
 
         foreach ($searchResult as $user) {
+            ///Potentially polymorphic call. ActiveRecord does not have members in its hierarchy
             $users[] = $user->serialize();
         }
 

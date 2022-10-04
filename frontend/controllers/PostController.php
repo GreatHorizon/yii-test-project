@@ -2,6 +2,7 @@
 
 namespace frontend\controllers;
 
+use common\models\User;
 use Yii;
 use yii\web\Controller;
 use yii\web\MethodNotAllowedHttpException;
@@ -67,7 +68,22 @@ class PostController extends Controller
             throw new ServerErrorHttpException('AccessToken should not be empty');
         }
 
-        return [];
+        $user = User::findIdentityByAccessToken($accessToken);
+
+        if ($user == null) {
+            return ['error' => 'Invalid access token'];
+        }
+
+        ///Potentially polymorphic call. ActiveRecord does not have members in its hierarchy
+        $searchResult = $user->getPosts()->all();
+
+        $posts = [];
+
+        foreach ($searchResult as $post) {
+            $posts[] = $post->serialize();
+        }
+
+        return $posts;
     }
 
     /**
