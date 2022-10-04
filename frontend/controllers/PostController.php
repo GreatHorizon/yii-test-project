@@ -2,6 +2,7 @@
 
 namespace frontend\controllers;
 
+use common\models\Post;
 use common\models\User;
 use Yii;
 use yii\web\Controller;
@@ -76,7 +77,6 @@ class PostController extends Controller
 
         ///Potentially polymorphic call. ActiveRecord does not have members in its hierarchy
         $searchResult = $user->getPosts()->all();
-
         $posts = [];
 
         foreach ($searchResult as $post) {
@@ -97,6 +97,19 @@ class PostController extends Controller
             throw new ServerErrorHttpException('AccessToken should not be empty');
         }
 
-        return [];
+        if (User::findIdentityByAccessToken($accessToken) == null) {
+            return ['error' => 'Invalid access token'];
+        }
+
+        ///Potentially polymorphic call. ActiveRecord does not have members in its hierarchy
+        $searchResult = Post::find()->all();
+
+        $posts = [];
+
+        foreach ($searchResult as $post) {
+            $posts[] = $post->serialize();
+        }
+
+        return $posts;
     }
 }
