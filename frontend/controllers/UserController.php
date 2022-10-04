@@ -27,6 +27,7 @@ class UserController extends Controller
 
     /**
      * @throws MethodNotAllowedHttpException
+     * @throws ServerErrorHttpException
      */
     public function actionIndex(): array
     {
@@ -50,7 +51,19 @@ class UserController extends Controller
             throw new ServerErrorHttpException('AccessToken should not be empty');
         }
 
-        return [];
+        $users = [];
+
+        $searchResult = User::find()->all();
+
+        if (empty($searchResult)) {
+          return [];
+        }
+
+        foreach ($searchResult as $user) {
+            $users[] = $user->serialize();
+        }
+
+        return $users;
     }
 
 

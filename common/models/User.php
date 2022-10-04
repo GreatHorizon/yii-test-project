@@ -116,4 +116,16 @@ class User extends BaseUser implements IdentityInterface
 
         return $fields;
     }
+
+    public function serialize(): array {
+        return [
+            "userId" => $this->userId,
+            "username"=>$this->username,
+            "email" => $this->email,
+            "status" => $this->status,
+            "createdAt" => $this->createdAt,
+            "updatedAt" => $this->updatedAt,
+        ];
+    }
+
 }

@@ -13,4 +13,6 @@ class AccessToken extends BaseAccessToken
     public static function generateToken(): string {
         return Yii::$app->security->generateRandomString() . '_' . time();
     }
+
+
 }
