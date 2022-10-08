@@ -23,6 +23,10 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'text') ?>
 
+    <?= $form->field($model, 'createdAt') ?>
+
+    <?php // echo $form->field($model, 'updatedAt') ?>
+
     <div class="form-group">
         <?= Html::submitButton('Search', ['class' => 'btn btn-primary']) ?>
         <?= Html::resetButton('Reset', ['class' => 'btn btn-outline-secondary']) ?>
