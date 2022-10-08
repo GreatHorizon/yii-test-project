@@ -2,8 +2,6 @@
 
 namespace common\models;
 
-use Yii;
-
 /**
  * This is the model class for table "post".
  *
@@ -30,13 +28,39 @@ class Post extends BasePost
     }
 
 
-    public function serialize(): array {
+    public function serialize(): array
+    {
         return [
             "userId" => $this->postId,
-            "authorId"=>$this->authorId,
+            "authorId" => $this->authorId,
             "title" => $this->title,
             "status" => $this->text,
         ];
     }
+
+    public function beforeSave($insert): bool
+    {
+        if (!parent::beforeSave($insert)) {
+            return false;
+        }
+
+        if ($insert) {
+            $this->createdAt = time();
+        }
+
+        $this->updatedAt = time();
+
+        return parent::beforeSave($insert);
+    }
+
+    public function __construct($title = null, $text = null, $userId = null, $config = [])
+    {
+        $this->title = $title;
+        $this->text = $text;
+        $this->authorId = $userId;
+
+        parent::__construct($config);
+    }
+
 
 }

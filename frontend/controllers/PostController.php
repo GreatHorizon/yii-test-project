@@ -60,22 +60,54 @@ class PostController extends Controller
     }
 
     /**
+     * @throws MethodNotAllowedHttpException
+     */
+    public function actionCreate(): array
+    {
+        $request = Yii::$app->request;
+
+        if ($request->isPost) {
+            return $this->createPost($request);
+        } else {
+            throw new MethodNotAllowedHttpException;
+        }
+    }
+
+    /**
      * @throws ServerErrorHttpException
+     * @throws NotFoundHttpException
+     */
+    private function createPost($request): array
+    {
+        $user = $this->findUserFromRequest($request->post('accessToken'));
+
+        $title = $request->post('title');
+        $text = $request->post('text');
+
+        if (empty($title)) {
+            throw new ServerErrorHttpException('Title of post should not be empty');
+        }
+
+        if (empty($text)) {
+            throw new ServerErrorHttpException('Text of post should not be empty');
+        }
+
+        $post = new Post($title, $text, $user->userId);
+
+        if (!$post->save()) {
+            throw new ServerErrorHttpException('Unable to save post');
+        }
+
+        return $post->serialize();
+    }
+
+    /**
+     * @throws ServerErrorHttpException
+     * @throws NotFoundHttpException
      */
     private function getMyPosts($request): array
     {
-        $accessToken = $request->get('accessToken');
-
-        if (empty($accessToken)) {
-            throw new ServerErrorHttpException('AccessToken should not be empty');
-        }
-
-        $user = User::findIdentityByAccessToken($accessToken);
-
-        if (empty($user)) {
-            throw new ServerErrorHttpException('AccessToken should not be empty');
-        }
-
+        $user = $this->findUserFromRequest($request->get('accessToken'));
         ///Potentially polymorphic call. ActiveRecord does not have members in its hierarchy
         $searchResult = $user->getPosts()->orderBy('createdAt')->all();
         $posts = [];
@@ -93,17 +125,7 @@ class PostController extends Controller
      */
     private function getAllPosts($request): array
     {
-        $accessToken = $request->get('accessToken');
-
-        if (empty($accessToken)) {
-            throw new ServerErrorHttpException('AccessToken should not be empty');
-        }
-
-        $foundUser = User::findIdentityByAccessToken($accessToken);
-
-        if (empty($foundUser)) {
-            throw new NotFoundHttpException('User not found');
-        }
+        $this->findUserFromRequest($request->get('accessToken'));
 
         ///Potentially polymorphic call. ActiveRecord does not have members in its hierarchy
         $searchResult = Post::find()->orderBy('createdAt')->all();
@@ -115,5 +137,25 @@ class PostController extends Controller
         }
 
         return $posts;
+    }
+
+
+    /**
+     * @throws NotFoundHttpException
+     * @throws ServerErrorHttpException
+     */
+    private function findUserFromRequest($accessToken)
+    {
+        if (empty($accessToken)) {
+            throw new ServerErrorHttpException('AccessToken should not be empty');
+        }
+
+        $foundUser = User::findIdentityByAccessToken($accessToken);
+
+        if (empty($foundUser)) {
+            throw new NotFoundHttpException('User not found');
+        }
+
+        return $foundUser;
     }
 }
