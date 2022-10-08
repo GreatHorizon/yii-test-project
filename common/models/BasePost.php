@@ -3,8 +3,6 @@
 namespace common\models;
 
 use Yii;
-use yii\db\ActiveQuery;
-use yii\db\ActiveRecord;
 
 /**
  * This is the model class for table "post".
@@ -13,10 +11,12 @@ use yii\db\ActiveRecord;
  * @property int $authorId
  * @property string|null $title
  * @property string|null $text
+ * @property int|null $createdAt
+ * @property int|null $updatedAt
  *
  * @property User $author
  */
-class BasePost extends ActiveRecord
+class BasePost extends \yii\db\ActiveRecord
 {
     /**
      * {@inheritdoc}
@@ -33,7 +33,7 @@ class BasePost extends ActiveRecord
     {
         return [
             [['authorId'], 'required'],
-            [['authorId'], 'integer'],
+            [['authorId', 'createdAt', 'updatedAt'], 'integer'],
             [['text'], 'string'],
             [['title'], 'string', 'max' => 255],
             [['authorId'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['authorId' => 'userId']],
@@ -50,13 +50,15 @@ class BasePost extends ActiveRecord
             'authorId' => 'Author ID',
             'title' => 'Title',
             'text' => 'Text',
+            'createdAt' => 'Created At',
+            'updatedAt' => 'Updated At',
         ];
     }
 
     /**
      * Gets query for [[Author]].
      *
-     * @return ActiveQuery
+     * @return \yii\db\ActiveQuery
      */
     public function getAuthor()
     {
