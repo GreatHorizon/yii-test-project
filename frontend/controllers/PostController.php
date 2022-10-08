@@ -7,6 +7,7 @@ use common\models\User;
 use Yii;
 use yii\web\Controller;
 use yii\web\MethodNotAllowedHttpException;
+use yii\web\NotFoundHttpException;
 use yii\web\Response;
 use yii\web\ServerErrorHttpException;
 
@@ -65,14 +66,14 @@ class PostController extends Controller
     {
         $accessToken = $request->get('accessToken');
 
-        if ($accessToken == null) {
+        if (empty($accessToken)) {
             throw new ServerErrorHttpException('AccessToken should not be empty');
         }
 
         $user = User::findIdentityByAccessToken($accessToken);
 
-        if ($user == null) {
-            return ['error' => 'Invalid access token'];
+        if (empty($user)) {
+            throw new ServerErrorHttpException('AccessToken should not be empty');
         }
 
         ///Potentially polymorphic call. ActiveRecord does not have members in its hierarchy
@@ -88,17 +89,20 @@ class PostController extends Controller
 
     /**
      * @throws ServerErrorHttpException
+     * @throws NotFoundHttpException
      */
     private function getAllPosts($request): array
     {
         $accessToken = $request->get('accessToken');
 
-        if ($accessToken == null) {
+        if (empty($accessToken)) {
             throw new ServerErrorHttpException('AccessToken should not be empty');
         }
 
-        if (User::findIdentityByAccessToken($accessToken) == null) {
-            return ['error' => 'Invalid access token'];
+        $foundUser = User::findIdentityByAccessToken($accessToken);
+
+        if (empty($foundUser)) {
+            throw new NotFoundHttpException('User not found');
         }
 
         ///Potentially polymorphic call. ActiveRecord does not have members in its hierarchy
