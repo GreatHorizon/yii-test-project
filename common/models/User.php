@@ -2,7 +2,6 @@
 
 namespace common\models;
 
-use backend\models\Post;
 use Yii;
 use yii\base\Exception;
 use yii\web\IdentityInterface;
@@ -133,4 +132,20 @@ class User extends BaseUser implements IdentityInterface
             "updatedAt" => $this->updatedAt,
         ];
     }
+
+    public function beforeSave($insert): bool
+    {
+        if (!parent::beforeSave($insert)) {
+            return false;
+        }
+
+        if ($insert) {
+            $this->createdAt = time();
+        }
+
+        $this->updatedAt = time();
+
+        return parent::beforeSave($insert);
+    }
+
 }

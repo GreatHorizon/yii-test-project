@@ -54,9 +54,6 @@ class SignupForm extends Model
         $user->username = $this->username;
         $user->email = $this->email;
         $user->setPassword($this->password);
-        $date = new DateTimeImmutable();
-        $user->createdAt = $date->getTimestamp();
-        $user->updatedAt = $date->getTimestamp();
         $user->generateAuthKey();
         $user->generateEmailVerificationToken();
 
