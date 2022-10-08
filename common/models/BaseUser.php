@@ -35,7 +35,7 @@ class BaseUser extends ActiveRecord
     /**
      * {@inheritdoc}
      */
-    public function rules()
+    public function rules(): array
     {
         return [
             [['username', 'authKey', 'passwordHash', 'email', 'createdAt', 'updatedAt'], 'required'],

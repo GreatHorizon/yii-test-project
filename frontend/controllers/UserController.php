@@ -51,7 +51,7 @@ class UserController extends Controller
             throw new ServerErrorHttpException('AccessToken should not be empty');
         }
 
-        $searchResult = User::find()->all();
+        $searchResult = User::find()->orderBy('createdAt')->all();
         $users = [];
 
         foreach ($searchResult as $user) {

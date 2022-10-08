@@ -76,7 +76,7 @@ class PostController extends Controller
         }
 
         ///Potentially polymorphic call. ActiveRecord does not have members in its hierarchy
-        $searchResult = $user->getPosts()->all();
+        $searchResult = $user->getPosts()->orderBy('createdAt')->all();
         $posts = [];
 
         foreach ($searchResult as $post) {
@@ -102,7 +102,7 @@ class PostController extends Controller
         }
 
         ///Potentially polymorphic call. ActiveRecord does not have members in its hierarchy
-        $searchResult = Post::find()->all();
+        $searchResult = Post::find()->orderBy('createdAt')->all();
 
         $posts = [];
 
