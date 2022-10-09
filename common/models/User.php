@@ -122,10 +122,11 @@ class User extends BaseUser implements IdentityInterface
         return $fields;
     }
 
-    public function serialize(): array {
+    public function serialize(): array
+    {
         return [
             "userId" => $this->userId,
-            "username"=>$this->username,
+            "username" => $this->username,
             "email" => $this->email,
             "status" => $this->status,
             "createdAt" => $this->createdAt,
@@ -147,5 +148,4 @@ class User extends BaseUser implements IdentityInterface
 
         return parent::beforeSave($insert);
     }
-
 }

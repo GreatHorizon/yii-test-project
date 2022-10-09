@@ -10,7 +10,6 @@ use yii\web\ServerErrorHttpException;
 
 class UserController extends Controller
 {
-
     public function behaviors(): array
     {
         $behaviors = parent::behaviors();
@@ -24,10 +23,28 @@ class UserController extends Controller
         return $behaviors;
     }
 
-
     /**
      * @throws MethodNotAllowedHttpException
      * @throws ServerErrorHttpException
+     * @SWG\Get(path="/user",
+     *     tags={"User"},
+     *     summary="Get users list",
+     *     @SWG\Parameter(
+     *         name="accessToken",
+     *         in="path",
+     *         description="User access token",
+     *         required=true,
+     *         type="string",
+     *     ),
+     *     @SWG\Response(
+     *         response = 200,
+     *         description = "User collection response",
+     *         @SWG\Schema(
+     *             type="array",
+     *             @SWG\Items(ref = "#/definitions/User")
+     *         ),
+     *     )
+     * )
      */
     public function actionIndex(): array
     {
@@ -44,7 +61,8 @@ class UserController extends Controller
     /**
      * @throws ServerErrorHttpException
      */
-    private function getAllUsers($request) : array {
+    private function getAllUsers($request): array
+    {
         $accessToken = $request->get('accessToken');
 
         if ($accessToken == null) {
@@ -61,6 +79,4 @@ class UserController extends Controller
 
         return $users;
     }
-
-
 }

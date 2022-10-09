@@ -61,6 +61,4 @@ class Post extends BasePost
 
         parent::__construct($config);
     }
-
-
 }

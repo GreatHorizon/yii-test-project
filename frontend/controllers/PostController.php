@@ -28,10 +28,29 @@ class PostController extends Controller
         return $behaviors;
     }
 
-
     /**
      * @throws MethodNotAllowedHttpException
      * @throws ServerErrorHttpException
+     * @throws NotFoundHttpException
+     * @SWG\Get(path="/post",
+     *     tags={"Post"},
+     *     summary="Get full post list",
+     *     @SWG\Parameter(
+     *         name="accessToken",
+     *         in="path",
+     *         description="User access token",
+     *         required=true,
+     *         type="string",
+     *     ),
+     *     @SWG\Response(
+     *         response = 200,
+     *         description = "Post collection response",
+     *         @SWG\Schema(
+     *             type="array",
+     *             @SWG\Items(ref = "#/definitions/Post")
+     *         ),
+     *     )
+     * )
      */
     public function actionIndex(): array
     {
@@ -47,6 +66,26 @@ class PostController extends Controller
     /**
      * @throws MethodNotAllowedHttpException
      * @throws ServerErrorHttpException
+     * @throws NotFoundHttpException
+     * @SWG\Get(path="/my-posts",
+     *     tags={"Post"},
+     *     summary="Get my post list",
+     *     @SWG\Parameter(
+     *         name="accessToken",
+     *         in="path",
+     *         description="User access token",
+     *         required=true,
+     *         type="string",
+     *     ),
+     *     @SWG\Response(
+     *         response = 200,
+     *         description = "Post collection response",
+     *         @SWG\Schema(
+     *             type="array",
+     *             @SWG\Items(ref = "#/definitions/Post")
+     *         ),
+     *     )
+     * )
      */
     public function actionMyPosts(): array
     {
@@ -60,7 +99,40 @@ class PostController extends Controller
     }
 
     /**
+     * @return array
      * @throws MethodNotAllowedHttpException
+     * @throws NotFoundHttpException
+     * @throws ServerErrorHttpException
+     * @SWG\Post(path="/create",
+     *     tags={"Post"},
+     *     summary="Create new post",
+     *     @SWG\Parameter(
+     *         name="accessToken",
+     *         in="body",
+     *         description="User access token",
+     *         required=true,
+     *         type="string",
+     *     ),
+     *     @SWG\Parameter(
+     *         name="title",
+     *         in="body",
+     *         description="Post title",
+     *         required=true,
+     *         type="string",
+     *     ),
+     *      @SWG\Parameter(
+     *         name="text",
+     *         in="body",
+     *         description="Post text",
+     *         required=true,
+     *         type="string",
+     *     ),
+     *     @SWG\Response(
+     *         response = 200,
+     *         description = "Post created response",
+     *         @SWG\Schema(ref = "#/definitions/Post"),
+     *     )
+     * )
      */
     public function actionCreate(): array
     {
@@ -108,6 +180,7 @@ class PostController extends Controller
     private function getMyPosts($request): array
     {
         $user = $this->findUserFromRequest($request->get('accessToken'));
+
         ///Potentially polymorphic call. ActiveRecord does not have members in its hierarchy
         $searchResult = $user->getPosts()->orderBy('createdAt')->all();
         $posts = [];
@@ -127,12 +200,11 @@ class PostController extends Controller
     {
         $this->findUserFromRequest($request->get('accessToken'));
 
-        ///Potentially polymorphic call. ActiveRecord does not have members in its hierarchy
         $searchResult = Post::find()->orderBy('createdAt')->all();
-
         $posts = [];
 
         foreach ($searchResult as $post) {
+            ///Potentially polymorphic call. ActiveRecord does not have members in its hierarchy
             $posts[] = $post->serialize();
         }
 

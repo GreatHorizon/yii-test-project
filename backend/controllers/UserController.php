@@ -2,15 +2,12 @@
 
 namespace backend\controllers;
 
-use common\models\User;
 use backend\models\UserSearch;
+use common\models\User;
+use yii\filters\VerbFilter;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
-use yii\filters\VerbFilter;
 
-/**
- * UserController implements the CRUD actions for User model.
- */
 class UserController extends Controller
 {
     /**
@@ -31,11 +28,6 @@ class UserController extends Controller
         );
     }
 
-    /**
-     * Lists all User models.
-     *
-     * @return string
-     */
     public function actionIndex()
     {
         $searchModel = new UserSearch();

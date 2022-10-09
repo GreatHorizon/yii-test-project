@@ -42,11 +42,13 @@ return [
         ],
         'urlManager' => [
             'enablePrettyUrl' => true,
+            //'enableStrictParsing' => true,
             'showScriptName' => false,
             'rules' => [
                 ['class' => 'yii\rest\UrlRule', 'controller' => 'post'],
                 ['class' => 'yii\rest\UrlRule', 'controller' => 'user'],
-                ['class' => 'yii\rest\UrlRule', 'controller' => 'login']
+                ['class' => 'yii\rest\UrlRule', 'controller' => 'login'],
+                'GET,HEAD users' => 'user/index',
             ],
         ],
     ],
