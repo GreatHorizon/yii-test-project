@@ -2,10 +2,9 @@
 
 namespace frontend\models;
 
-use DateTimeImmutable;
+use common\models\User;
 use Yii;
 use yii\base\Model;
-use common\models\User;
 
 /**
  * Signup form
@@ -49,13 +48,16 @@ class SignupForm extends Model
         if (!$this->validate()) {
             return null;
         }
-        
+
         $user = new User();
         $user->username = $this->username;
         $user->email = $this->email;
+        $user->role = User::ROLE_USER;
         $user->setPassword($this->password);
         $user->generateAuthKey();
         $user->generateEmailVerificationToken();
+        $user->createdAt = time();
+        $user->updatedAt = time();
 
         return $user->save();
     }
