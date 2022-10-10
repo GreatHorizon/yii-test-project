@@ -2,9 +2,7 @@
 
 namespace common\models;
 
-use common\models\Post;
-use yii\db\ActiveQuery;
-use yii\db\ActiveRecord;
+use Yii;
 
 /**
  * This is the model class for table "user".
@@ -19,15 +17,17 @@ use yii\db\ActiveRecord;
  * @property int $createdAt
  * @property int $updatedAt
  * @property string|null $verificationToken
+ * @property int|null $role
  *
+ * @property AccessToken[] $accessTokens
  * @property Post[] $posts
  */
-class BaseUser extends ActiveRecord
+class BaseUser extends \yii\db\ActiveRecord
 {
     /**
      * {@inheritdoc}
      */
-    public static function tableName(): string
+    public static function tableName()
     {
         return 'user';
     }
@@ -35,11 +35,11 @@ class BaseUser extends ActiveRecord
     /**
      * {@inheritdoc}
      */
-    public function rules(): array
+    public function rules()
     {
         return [
             [['username', 'authKey', 'passwordHash', 'email', 'createdAt', 'updatedAt'], 'required'],
-            [['status', 'createdAt', 'updatedAt'], 'integer'],
+            [['status', 'createdAt', 'updatedAt', 'role'], 'integer'],
             [['username', 'passwordHash', 'passwordResetToken', 'email', 'verificationToken'], 'string', 'max' => 255],
             [['authKey'], 'string', 'max' => 32],
             [['username'], 'unique'],
@@ -48,26 +48,40 @@ class BaseUser extends ActiveRecord
         ];
     }
 
-    public function attributeLabels(): array
+    /**
+     * {@inheritdoc}
+     */
+    public function attributeLabels()
     {
         return [
-            'userId' => 'ID пользователя',
-            'username' => 'Имя пользователя',
+            'userId' => 'User ID',
+            'username' => 'Username',
             'authKey' => 'Auth Key',
             'passwordHash' => 'Password Hash',
             'passwordResetToken' => 'Password Reset Token',
-            'email' => 'Почта',
-            'status' => 'Статус',
+            'email' => 'Email',
+            'status' => 'Status',
             'createdAt' => 'Created At',
             'updatedAt' => 'Updated At',
             'verificationToken' => 'Verification Token',
+            'role' => 'Role',
         ];
+    }
+
+    /**
+     * Gets query for [[AccessTokens]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getAccessTokens()
+    {
+        return $this->hasMany(AccessToken::class, ['userId' => 'userId']);
     }
 
     /**
      * Gets query for [[Posts]].
      *
-     * @return ActiveQuery
+     * @return \yii\db\ActiveQuery
      */
     public function getPosts()
     {

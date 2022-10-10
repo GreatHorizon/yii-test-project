@@ -14,10 +14,10 @@ class UserSearch extends User
     /**
      * {@inheritdoc}
      */
-    public function rules() : array
+    public function rules()
     {
         return [
-            [['userId', 'status', 'createdAt', 'updatedAt'], 'integer'],
+            [['userId', 'status', 'createdAt', 'updatedAt', 'role'], 'integer'],
             [['username', 'authKey', 'passwordHash', 'passwordResetToken', 'email', 'verificationToken'], 'safe'],
         ];
     }
@@ -62,6 +62,7 @@ class UserSearch extends User
             'status' => $this->status,
             'createdAt' => $this->createdAt,
             'updatedAt' => $this->updatedAt,
+            'role' => $this->role,
         ]);
 
         $query->andFilterWhere(['like', 'username', $this->username])

@@ -27,6 +27,13 @@ class User extends BaseUser implements IdentityInterface
     const STATUS_DELETED = 0;
     const STATUS_INACTIVE = 9;
     const STATUS_ACTIVE = 10;
+    const ROLE_ADMIN = 0;
+    const ROLE_USER = 1;
+
+    public function isAdmin()
+    {
+        return $this->role == self::ROLE_ADMIN;
+    }
 
     public function attributeLabels(): array
     {
