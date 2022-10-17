@@ -12,7 +12,7 @@ class m220930_205900_user_rename_verification_token extends Migration
      */
     public function safeUp()
     {
-        $this->renameColumn('user','verification_token','verificationToken');
+        $this->renameColumn('user', 'verification_token', 'verificationToken');
 
     }
 
@@ -21,6 +21,6 @@ class m220930_205900_user_rename_verification_token extends Migration
      */
     public function safeDown()
     {
-        $this->renameColumn('user','verificationToken','verification_token');
+        $this->renameColumn('user', 'verificationToken', 'verification_token');
     }
 }
