@@ -9,12 +9,13 @@ use Yii;
  *
  * @property int $accessTokenId
  * @property int $userId
- * @property string|null $createdAt
+ * @property int|null $createdAt
  * @property string|null $token
+ * @property int|null $updatedAt
  *
  * @property User $user
  */
-class BaseAccessToken extends \yii\db\ActiveRecord
+class BaseAccessToken extends \common\models\BaseModel
 {
     /**
      * {@inheritdoc}
@@ -31,8 +32,7 @@ class BaseAccessToken extends \yii\db\ActiveRecord
     {
         return [
             [['userId'], 'required'],
-            [['userId'], 'integer'],
-            [['createdAt'], 'safe'],
+            [['userId', 'createdAt', 'updatedAt'], 'integer'],
             [['token'], 'string', 'max' => 255],
             [['userId'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['userId' => 'userId']],
         ];
@@ -48,6 +48,7 @@ class BaseAccessToken extends \yii\db\ActiveRecord
             'userId' => 'User ID',
             'createdAt' => 'Created At',
             'token' => 'Token',
+            'updatedAt' => 'Updated At',
         ];
     }
 

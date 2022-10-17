@@ -14,15 +14,15 @@ use Yii;
  * @property string|null $passwordResetToken
  * @property string $email
  * @property int $status
- * @property int $createdAt
- * @property int $updatedAt
+ * @property int|null $createdAt
+ * @property int|null $updatedAt
  * @property string|null $verificationToken
  * @property int|null $role
  *
  * @property AccessToken[] $accessTokens
  * @property Post[] $posts
  */
-class BaseUser extends \yii\db\ActiveRecord
+class BaseUser extends \common\models\BaseModel
 {
     /**
      * {@inheritdoc}
@@ -38,7 +38,7 @@ class BaseUser extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['username', 'authKey', 'passwordHash', 'email', 'createdAt', 'updatedAt'], 'required'],
+            [['username', 'authKey', 'passwordHash', 'email'], 'required'],
             [['status', 'createdAt', 'updatedAt', 'role'], 'integer'],
             [['username', 'passwordHash', 'passwordResetToken', 'email', 'verificationToken'], 'string', 'max' => 255],
             [['authKey'], 'string', 'max' => 32],

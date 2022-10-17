@@ -140,19 +140,4 @@ class User extends BaseUser implements IdentityInterface
             "updatedAt" => $this->updatedAt,
         ];
     }
-
-    public function beforeSave($insert): bool
-    {
-        if (!parent::beforeSave($insert)) {
-            return false;
-        }
-
-        if ($insert) {
-            $this->createdAt = time();
-        }
-
-        $this->updatedAt = time();
-
-        return parent::beforeSave($insert);
-    }
 }
