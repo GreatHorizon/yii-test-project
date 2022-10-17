@@ -167,7 +167,7 @@ class PostController extends Controller
         $post = new Post($title, $text, $user->userId);
 
         if (!$post->save()) {
-            throw new ServerErrorHttpException('Unable to save post');
+            throw new ServerErrorHttpException('Unable to save post: ' . var_export($post->getErrors(), true));
         }
 
         return $post->serialize();
@@ -181,11 +181,17 @@ class PostController extends Controller
     {
         $user = $this->findUserFromRequest($request->get('accessToken'));
 
-        ///Potentially polymorphic call. ActiveRecord does not have members in its hierarchy
-        $searchResult = $user->getPosts()->orderBy('createdAt')->all();
+        $offset = $request->get('offset');
+        $limit = $request->get('limit');
+
+        $query = $user->getPosts()
+            ->offset($offset ?? 0)
+            ->limit($limit ?? 1000)
+            ->orderBy('createdAt');
+
         $posts = [];
 
-        foreach ($searchResult as $post) {
+        foreach ($query->each() as $post) {
             $posts[] = $post->serialize();
         }
 
@@ -200,11 +206,17 @@ class PostController extends Controller
     {
         $this->findUserFromRequest($request->get('accessToken'));
 
-        $searchResult = Post::find()->orderBy('createdAt')->all();
+        $offset = $request->get('offset');
+        $limit = $request->get('limit');
+
+        $query = Post::find()
+            ->offset($offset ?? 0)
+            ->limit($limit ?? 1000)
+            ->orderBy('createdAt');
+
         $posts = [];
 
-        foreach ($searchResult as $post) {
-            ///Potentially polymorphic call. ActiveRecord does not have members in its hierarchy
+        foreach ($query->each() as $post) {
             $posts[] = $post->serialize();
         }
 

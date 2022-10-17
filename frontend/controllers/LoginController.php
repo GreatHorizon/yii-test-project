@@ -2,15 +2,14 @@
 
 namespace frontend\controllers;
 
-use DateTimeImmutable;
+use common\models\AccessToken;
+use common\models\User;
 use Yii;
 use yii\base\Exception;
 use yii\web\Controller;
 use yii\web\MethodNotAllowedHttpException;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
-use common\models\User;
-use common\models\AccessToken;
 use yii\web\ServerErrorHttpException;
 
 class LoginController extends Controller
@@ -75,12 +74,7 @@ class LoginController extends Controller
     private static function createAccessToken(int $userId): AccessToken
     {
         $accessToken = new AccessToken();
-        $date = new DateTimeImmutable();
-
         $accessToken->userId = $userId;
-        $accessToken->token = AccessToken::generateToken();
-        $accessToken->createdAt = $date->getTimestamp();
-
         return $accessToken;
     }
 }

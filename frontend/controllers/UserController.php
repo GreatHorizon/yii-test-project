@@ -6,6 +6,7 @@ use common\models\User;
 use Yii;
 use yii\web\Controller;
 use yii\web\MethodNotAllowedHttpException;
+use yii\web\NotFoundHttpException;
 use yii\web\ServerErrorHttpException;
 
 class UserController extends Controller
@@ -26,6 +27,7 @@ class UserController extends Controller
     /**
      * @throws MethodNotAllowedHttpException
      * @throws ServerErrorHttpException
+     * @throws NotFoundHttpException
      * @SWG\Get(path="/user",
      *     tags={"User"},
      *     summary="Get users list",
@@ -50,30 +52,30 @@ class UserController extends Controller
     {
         $request = Yii::$app->request;
 
-        if ($request->isGet) {
-            return $this->getAllUsers($request);
-        } else {
+        if (!$request->isGet) {
             throw new MethodNotAllowedHttpException;
         }
-    }
 
-
-    /**
-     * @throws ServerErrorHttpException
-     */
-    private function getAllUsers($request): array
-    {
         $accessToken = $request->get('accessToken');
+        $offset = $request->get('offset');
+        $limit = $request->get('limit');
 
         if ($accessToken == null) {
             throw new ServerErrorHttpException('AccessToken should not be empty');
         }
 
-        $searchResult = User::find()->orderBy('createdAt')->all();
+        if (empty($foundUser)) {
+            throw new NotFoundHttpException('User not found');
+        }
+
+        $query = User::find()
+            ->offset($offset ?? 0)
+            ->limit($limit ?? 1000)
+            ->orderBy('createdAt');
+
         $users = [];
 
-        foreach ($searchResult as $user) {
-            ///Potentially polymorphic call. ActiveRecord does not have members in its hierarchy
+        foreach ($query->each() as $user) {
             $users[] = $user->serialize();
         }
 
