@@ -3,6 +3,8 @@
 namespace frontend\controllers;
 
 use common\models\User;
+use frontend\models\post\CreatePostForm;
+use frontend\models\user\GetUsersForm;
 use Yii;
 use yii\web\Controller;
 use yii\web\MethodNotAllowedHttpException;
@@ -50,35 +52,13 @@ class UserController extends Controller
      */
     public function actionIndex(): array
     {
-        $request = Yii::$app->request;
+        $model = new GetUsersForm();
+        $model->load(\Yii::$app->request->get(), '');
 
-        if (!$request->isGet) {
-            throw new MethodNotAllowedHttpException;
+        if ($model->getUsers()) {
+            return $model->getSerializedUsers();
+        } else {
+            return $model->getErrors();
         }
-
-        $accessToken = $request->get('accessToken');
-        $offset = $request->get('offset');
-        $limit = $request->get('limit');
-
-        if ($accessToken == null) {
-            throw new ServerErrorHttpException('AccessToken should not be empty');
-        }
-
-        if (empty($foundUser)) {
-            throw new NotFoundHttpException('User not found');
-        }
-
-        $query = User::find()
-            ->offset($offset ?? 0)
-            ->limit($limit ?? 1000)
-            ->orderBy('createdAt');
-
-        $users = [];
-
-        foreach ($query->each() as $user) {
-            $users[] = $user->serialize();
-        }
-
-        return $users;
     }
 }
