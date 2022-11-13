@@ -4,6 +4,10 @@ namespace frontend\controllers;
 
 use common\models\Post;
 use common\models\User;
+use frontend\models\post\CreatePostForm;
+
+use frontend\models\post\GetMyPostsForm;
+use frontend\models\post\GetPostsForm;
 use Yii;
 use yii\web\Controller;
 use yii\web\MethodNotAllowedHttpException;
@@ -54,12 +58,13 @@ class PostController extends Controller
      */
     public function actionIndex(): array
     {
-        $request = Yii::$app->request;
+        $model = new GetPostsForm();
+        $model->load(\Yii::$app->request->get(), '');
 
-        if ($request->isGet) {
-            return $this->getAllPosts($request);
+        if ($model->getPosts()) {
+            return $model->serializePosts();
         } else {
-            throw new MethodNotAllowedHttpException;
+            return $model->getErrors();
         }
     }
 
@@ -89,12 +94,13 @@ class PostController extends Controller
      */
     public function actionMyPosts(): array
     {
-        $request = Yii::$app->request;
+        $model = new GetMyPostsForm();
+        $model->load(\Yii::$app->request->get(), '');
 
-        if ($request->isGet) {
-            return $this->getMyPosts($request);
+        if ($model->getMyPosts()) {
+            return $model->serializeMyPosts();
         } else {
-            throw new MethodNotAllowedHttpException;
+            return $model->getErrors();
         }
     }
 
@@ -136,110 +142,13 @@ class PostController extends Controller
      */
     public function actionCreate(): array
     {
-        $request = Yii::$app->request;
+        $model = new CreatePostForm();
+        $model->load(\Yii::$app->request->post(), '');
 
-        if ($request->isPost) {
-            return $this->createPost($request);
+        if ($model->createPost()) {
+            return $model->getSerializedPost();
         } else {
-            throw new MethodNotAllowedHttpException;
+            return $model->getErrors();
         }
-    }
-
-    /**
-     * @throws ServerErrorHttpException
-     * @throws NotFoundHttpException
-     */
-    private function createPost($request): array
-    {
-        $user = $this->findUserFromRequest($request->post('accessToken'));
-
-        $title = $request->post('title');
-        $text = $request->post('text');
-
-        if (empty($title)) {
-            throw new ServerErrorHttpException('Title of post should not be empty');
-        }
-
-        if (empty($text)) {
-            throw new ServerErrorHttpException('Text of post should not be empty');
-        }
-
-        $post = new Post($title, $text, $user->userId);
-
-        if (!$post->save()) {
-            throw new ServerErrorHttpException('Unable to save post: ' . var_export($post->getErrors(), true));
-        }
-
-        return $post->serialize();
-    }
-
-    /**
-     * @throws ServerErrorHttpException
-     * @throws NotFoundHttpException
-     */
-    private function getMyPosts($request): array
-    {
-        $user = $this->findUserFromRequest($request->get('accessToken'));
-
-        $offset = $request->get('offset');
-        $limit = $request->get('limit');
-
-        $query = $user->getPosts()
-            ->offset($offset ?? 0)
-            ->limit($limit ?? 1000)
-            ->orderBy('createdAt');
-
-        $posts = [];
-
-        foreach ($query->each() as $post) {
-            $posts[] = $post->serialize();
-        }
-
-        return $posts;
-    }
-
-    /**
-     * @throws ServerErrorHttpException
-     * @throws NotFoundHttpException
-     */
-    private function getAllPosts($request): array
-    {
-        $this->findUserFromRequest($request->get('accessToken'));
-
-        $offset = $request->get('offset');
-        $limit = $request->get('limit');
-
-        $query = Post::find()
-            ->offset($offset ?? 0)
-            ->limit($limit ?? 1000)
-            ->orderBy('createdAt');
-
-        $posts = [];
-
-        foreach ($query->each() as $post) {
-            $posts[] = $post->serialize();
-        }
-
-        return $posts;
-    }
-
-
-    /**
-     * @throws NotFoundHttpException
-     * @throws ServerErrorHttpException
-     */
-    private function findUserFromRequest($accessToken)
-    {
-        if (empty($accessToken)) {
-            throw new ServerErrorHttpException('AccessToken should not be empty');
-        }
-
-        $foundUser = User::findIdentityByAccessToken($accessToken);
-
-        if (empty($foundUser)) {
-            throw new NotFoundHttpException('User not found');
-        }
-
-        return $foundUser;
     }
 }
