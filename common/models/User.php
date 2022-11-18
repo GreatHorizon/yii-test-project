@@ -22,6 +22,17 @@ use yii\web\IdentityInterface;
  *
  * @property Post[] $posts
  */
+
+/**
+ * @SWG\Definition(required={"username", "email"})
+ *
+ * @SWG\Property(property="userId", type="integer")
+ * @SWG\Property(property="email", type="string")
+ * @SWG\Property(property="username", type="string")
+ * @SWG\Property(property="status", type="integer")
+ * @SWG\Property(property="createdAt", type="integer")
+ * @SWG\Property(property="updatedAt", type="integer")
+ */
 class User extends BaseUser implements IdentityInterface
 {
     const STATUS_DELETED = 0;
