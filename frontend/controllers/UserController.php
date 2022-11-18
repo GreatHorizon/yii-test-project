@@ -56,7 +56,7 @@ class UserController extends Controller
         $model->load(\Yii::$app->request->get(), '');
 
         if ($model->getUsers()) {
-            return $model->getSerializedUsers();
+            return $model->serializeUsers();
         } else {
             return $model->getErrors();
         }

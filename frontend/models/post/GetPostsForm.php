@@ -48,7 +48,8 @@ class GetPostsForm extends Model
     }
 
 
-    public function serializePosts() {
+    public function serializePosts(): array
+    {
         $posts = [];
 
         foreach ($this->posts->each() as $post) {

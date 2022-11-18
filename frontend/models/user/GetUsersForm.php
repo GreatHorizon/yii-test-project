@@ -2,7 +2,6 @@
 
 namespace frontend\models\user;
 
-use common\models\Post;
 use common\models\User;
 use yii\base\Model;
 
@@ -47,7 +46,8 @@ class GetUsersForm extends Model
     }
 
 
-    public function getSerializedUsers() {
+    public function serializeUsers(): array
+    {
         $users = [];
 
         foreach ($this->users->each() as $post) {

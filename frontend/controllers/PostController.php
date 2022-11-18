@@ -2,13 +2,9 @@
 
 namespace frontend\controllers;
 
-use common\models\Post;
-use common\models\User;
 use frontend\models\post\CreatePostForm;
-
 use frontend\models\post\GetMyPostsForm;
 use frontend\models\post\GetPostsForm;
-use Yii;
 use yii\web\Controller;
 use yii\web\MethodNotAllowedHttpException;
 use yii\web\NotFoundHttpException;
@@ -56,7 +52,7 @@ class PostController extends Controller
      *     )
      * )
      */
-    public function actionIndex(): array
+    public function actionAllPosts(): array
     {
         $model = new GetPostsForm();
         $model->load(\Yii::$app->request->get(), '');
