@@ -44,11 +44,11 @@ return [
             'enablePrettyUrl' => true,
             //'enableStrictParsing' => true,
             'showScriptName' => false,
-            'rules' => [
+            'rules' => [/*
                 ['class' => 'yii\rest\UrlRule', 'controller' => 'post'],
                 ['class' => 'yii\rest\UrlRule', 'controller' => 'user'],
                 ['class' => 'yii\rest\UrlRule', 'controller' => 'login'],
-                'GET,HEAD users' => 'user/index',
+                'GET,HEAD users' => 'user/index',*/
                 '' => 'site/index',
                 '<controller:\w+>/<action:\w+>/' => '<controller>/<action>',
             ],
