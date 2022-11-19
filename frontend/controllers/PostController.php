@@ -32,15 +32,27 @@ class PostController extends Controller
      * @throws MethodNotAllowedHttpException
      * @throws ServerErrorHttpException
      * @throws NotFoundHttpException
-     * @SWG\Get(path="/post",
+     * @SWG\Get(path="/post/all-posts",
      *     tags={"Post"},
      *     summary="Get full post list",
      *     @SWG\Parameter(
      *         name="accessToken",
-     *         in="path",
+     *         in="query",
      *         description="User access token",
      *         required=true,
      *         type="string",
+     *     ),
+     *     @SWG\Parameter(
+     *         name="offset",
+     *         in="query",
+     *         description="Offset",
+     *         type="int",
+     *     ),
+     *     @SWG\Parameter(
+     *         name="limit",
+     *         in="query",
+     *         description="Limit",
+     *         type="int",
      *     ),
      *     @SWG\Response(
      *         response = 200,
