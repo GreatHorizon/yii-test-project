@@ -4,14 +4,15 @@ namespace frontend\models\post;
 
 use common\models\User;
 use yii\base\Model;
+use yii\db\ActiveQuery;
 
 class GetMyPostsForm extends Model
 {
-    public $accessToken;
-    public $offset;
-    public $limit;
+    public int $offset;
+    public int $limit;
+    public string $accessToken;
 
-    private $myPosts;
+    private ActiveQuery $myPosts;
 
     /**
      * {@inheritdoc}
@@ -20,13 +21,15 @@ class GetMyPostsForm extends Model
     {
         return [
             [['accessToken'], 'required'],
-            [['limit', 'offset'], 'integer'],
-            [['accessToken'], 'string']
+            [['accessToken'], 'string'],
+            ['limit', 'default', 'value' => 20],
+            ['offset', 'default', 'value' => 0],
         ];
     }
 
 
-    public function getMyPosts() : bool {
+    public function getMyPosts(): bool
+    {
         if (!$this->validate()) {
             return false;
         }
@@ -39,13 +42,12 @@ class GetMyPostsForm extends Model
         }
 
         $this->myPosts = $user->getPosts()
-            ->offset($this->offset ?? 0)
-            ->limit($this->limit ?? 1000)
-            ->orderBy('createdAt');
+            ->offset($this->offset)
+            ->limit($this->limit)
+            ->orderBy(['createdAt' => SORT_DESC]);
 
         return true;
     }
-
 
 
     public function serializeMyPosts(): array
