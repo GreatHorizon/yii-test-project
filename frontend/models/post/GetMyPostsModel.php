@@ -4,15 +4,14 @@ namespace frontend\models\post;
 
 use common\models\User;
 use yii\base\Model;
-use yii\db\ActiveQuery;
 
-class GetMyPostsForm extends Model
+class GetMyPostsModel extends Model
 {
-    public int $offset;
-    public int $limit;
-    public string $accessToken;
+    public $offset;
+    public $limit;
+    public $accessToken;
 
-    private ActiveQuery $myPosts;
+    private $myPosts;
 
     /**
      * {@inheritdoc}

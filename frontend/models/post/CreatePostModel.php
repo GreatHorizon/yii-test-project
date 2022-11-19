@@ -6,7 +6,7 @@ use common\models\Post;
 use common\models\User;
 use yii\base\Model;
 
-class CreatePostForm extends Model
+class CreatePostModel extends Model
 {
     public $title;
     public $text;
@@ -46,7 +46,7 @@ class CreatePostForm extends Model
         $this->post->authorId = $user->userId;
 
         if (!$this->post->save()) {
-            $this->addError('Unable to save post: ' . var_export($this->post->getErrors()));
+            $this->addErrors($this->post->getErrors());
             return false;
         }
 

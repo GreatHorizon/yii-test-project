@@ -2,10 +2,7 @@
 
 namespace frontend\controllers;
 
-use common\models\User;
-use frontend\models\post\CreatePostForm;
 use frontend\models\user\GetUsersForm;
-use Yii;
 use yii\web\Controller;
 use yii\web\MethodNotAllowedHttpException;
 use yii\web\NotFoundHttpException;
@@ -30,7 +27,7 @@ class UserController extends Controller
      * @throws MethodNotAllowedHttpException
      * @throws ServerErrorHttpException
      * @throws NotFoundHttpException
-     * @SWG\Get(path="/user",
+     * @SWG\Get(path="user/all-users",
      *     tags={"User"},
      *     summary="Get users list",
      *     @SWG\Parameter(
@@ -50,7 +47,7 @@ class UserController extends Controller
      *     )
      * )
      */
-    public function actionIndex(): array
+    public function actionAllUsers(): array
     {
         $model = new GetUsersForm();
         $model->load(\Yii::$app->request->get(), '');

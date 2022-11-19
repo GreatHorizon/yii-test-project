@@ -6,7 +6,7 @@ use common\models\Post;
 use common\models\User;
 use yii\base\Model;
 
-class GetPostsForm extends Model
+class GetAllPostsModel extends Model
 {
     public $accessToken;
     public $offset;
@@ -40,7 +40,7 @@ class GetPostsForm extends Model
             $this->addError('error', 'User not found');
             return false;
         }
-        
+
         $this->posts = Post::find()
             ->offset($this->offset)
             ->limit($this->limit)

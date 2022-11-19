@@ -2,9 +2,9 @@
 
 namespace frontend\controllers;
 
-use frontend\models\post\CreatePostForm;
-use frontend\models\post\GetMyPostsForm;
-use frontend\models\post\GetPostsForm;
+use frontend\models\post\CreatePostModel;
+use frontend\models\post\GetAllPostsModel;
+use frontend\models\post\GetMyPostsModel;
 use yii\web\Controller;
 use yii\web\MethodNotAllowedHttpException;
 use yii\web\NotFoundHttpException;
@@ -32,7 +32,8 @@ class PostController extends Controller
      * @throws MethodNotAllowedHttpException
      * @throws ServerErrorHttpException
      * @throws NotFoundHttpException
-     * @SWG\Get(path="/post/all-posts",
+     * @SWG\Get(
+     *     path="/post/all-posts",
      *     tags={"Post"},
      *     summary="Get full post list",
      *     @SWG\Parameter(
@@ -66,7 +67,7 @@ class PostController extends Controller
      */
     public function actionAllPosts(): array
     {
-        $model = new GetPostsForm();
+        $model = new GetAllPostsModel();
         $model->load(\Yii::$app->request->get(), '');
 
         if ($model->getPosts()) {
@@ -80,15 +81,28 @@ class PostController extends Controller
      * @throws MethodNotAllowedHttpException
      * @throws ServerErrorHttpException
      * @throws NotFoundHttpException
-     * @SWG\Get(path="/my-posts",
+     * @SWG\Get(
+     *     path="/post/my-posts",
      *     tags={"Post"},
      *     summary="Get my post list",
      *     @SWG\Parameter(
      *         name="accessToken",
-     *         in="path",
+     *         in="query",
      *         description="User access token",
      *         required=true,
      *         type="string",
+     *     ),
+     *     @SWG\Parameter(
+     *         name="offset",
+     *         in="query",
+     *         description="Offset",
+     *         type="int",
+     *     ),
+     *     @SWG\Parameter(
+     *         name="limit",
+     *         in="query",
+     *         description="Limit",
+     *         type="int",
      *     ),
      *     @SWG\Response(
      *         response = 200,
@@ -102,7 +116,7 @@ class PostController extends Controller
      */
     public function actionMyPosts(): array
     {
-        $model = new GetMyPostsForm();
+        $model = new GetMyPostsModel();
         $model->load(\Yii::$app->request->get(), '');
 
         if ($model->getMyPosts()) {
@@ -117,7 +131,7 @@ class PostController extends Controller
      * @throws MethodNotAllowedHttpException
      * @throws NotFoundHttpException
      * @throws ServerErrorHttpException
-     * @SWG\Post(path="/create",
+     * @SWG\Post(path="post/create-post",
      *     tags={"Post"},
      *     summary="Create new post",
      *     @SWG\Parameter(
@@ -148,9 +162,9 @@ class PostController extends Controller
      *     )
      * )
      */
-    public function actionCreate(): array
+    public function actionCreatePost(): array
     {
-        $model = new CreatePostForm();
+        $model = new CreatePostModel();
         $model->load(\Yii::$app->request->post(), '');
 
         if ($model->createPost()) {
