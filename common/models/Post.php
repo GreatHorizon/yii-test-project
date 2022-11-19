@@ -42,10 +42,12 @@ class Post extends BasePost
     public function serialize(): array
     {
         return [
-            "userId" => $this->postId,
+            "postId" => $this->postId,
             "authorId" => $this->authorId,
             "title" => $this->title,
             "status" => $this->text,
+            "createdAt" => $this->createdAt,
+            "updatedAt" => $this->updatedAt,
         ];
     }
 
