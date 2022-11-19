@@ -21,13 +21,15 @@ class GetPostsForm extends Model
     {
         return [
             [['accessToken'], 'required'],
-            [['limit', 'offset'], 'integer'],
-            [['accessToken'], 'string']
+            [['accessToken'], 'string'],
+            ['limit', 'default', 'value' => 20],
+            ['offset', 'default', 'value' => 0],
         ];
     }
 
 
-    public function getPosts() :bool {
+    public function getPosts(): bool
+    {
         if (!$this->validate()) {
             return false;
         }
@@ -38,11 +40,11 @@ class GetPostsForm extends Model
             $this->addError('error', 'User not found');
             return false;
         }
-
+        
         $this->posts = Post::find()
-            ->offset($this->offset ?? 0)
-            ->limit($this->limit ?? 1000)
-            ->orderBy('createdAt');
+            ->offset($this->offset)
+            ->limit($this->limit)
+            ->orderBy(['createdAt' => SORT_DESC]);
 
         return true;
     }
