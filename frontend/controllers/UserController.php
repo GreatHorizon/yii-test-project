@@ -3,12 +3,12 @@
 namespace frontend\controllers;
 
 use frontend\models\user\GetUsersForm;
-use yii\web\Controller;
+use Symfony\Component\CssSelector\Exception\InternalErrorException;
 use yii\web\MethodNotAllowedHttpException;
 use yii\web\NotFoundHttpException;
 use yii\web\ServerErrorHttpException;
 
-class UserController extends Controller
+class UserController extends BaseController
 {
     public function behaviors(): array
     {
@@ -27,6 +27,7 @@ class UserController extends Controller
      * @throws MethodNotAllowedHttpException
      * @throws ServerErrorHttpException
      * @throws NotFoundHttpException
+     * @throws InternalErrorException
      * @SWG\Get(path="user/all-users",
      *     tags={"User"},
      *     summary="Get users list",
@@ -51,8 +52,10 @@ class UserController extends Controller
     {
         $model = new GetUsersForm();
         $model->load(\Yii::$app->request->get(), '');
+        $accessToken = \Yii::$app->request->get('accessToken');
 
-        if ($model->getUsers()) {
+
+        if ($this->checkIdentity($accessToken) && $model->getUsers()) {
             return $model->serializeUsers();
         } else {
             return $model->getErrors();

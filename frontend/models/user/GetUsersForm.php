@@ -25,17 +25,16 @@ class GetUsersForm extends Model
         ];
     }
 
-    public function getUsers() :bool {
+    /**
+     * @throws \Throwable
+     */
+    public function getUsers(): bool
+    {
         if (!$this->validate()) {
             return false;
         }
 
-        $user = User::findIdentityByAccessToken($this->accessToken);
-
-        if (empty($user)) {
-            $this->addError('error', 'User not found');
-            return false;
-        }
+        //can here\Yii::$app->user->getIdentity();
 
         $this->users = User::find()
             ->offset($this->offset ?? 0)

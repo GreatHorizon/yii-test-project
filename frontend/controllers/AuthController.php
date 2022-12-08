@@ -10,7 +10,7 @@ use yii\web\Response;
 
 class AuthController extends Controller
 {
-    public $enableCsrfValidation = false;
+
 
     public function behaviors(): array
     {
@@ -53,7 +53,6 @@ class AuthController extends Controller
      */
     public function actionLogin()
     {
-
         $model = new LoginModel();
         $model->load(\Yii::$app->request->post(), '');
 
