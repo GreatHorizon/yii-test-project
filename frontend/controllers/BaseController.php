@@ -12,7 +12,7 @@ abstract class BaseController extends Controller
 
     public Model $model;
 
-    public function checkIdentity(): bool
+    public function setIdentity(): bool
     {
         $accessToken = \Yii::$app->request->get('accessToken');
 

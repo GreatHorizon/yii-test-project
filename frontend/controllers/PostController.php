@@ -71,7 +71,7 @@ class PostController extends BaseController
 
         $this->model->load(\Yii::$app->request->get(), '');
 
-        if ($this->checkIdentity() && $this->model->getPosts()) {
+        if ($this->setIdentity() && $this->model->getPosts()) {
             return $this->model->serializePosts();
         } else {
             return $this->model->getErrors();
@@ -121,7 +121,7 @@ class PostController extends BaseController
         $this->model = new GetMyPostsModel();
         $this->model->load(\Yii::$app->request->get(), '');
 
-        if ($this->checkIdentity() && $this->model->getMyPosts()) {
+        if ($this->setIdentity() && $this->model->getMyPosts()) {
             return $this->model->serializeMyPosts();
         } else {
             return $this->model->getErrors();
@@ -170,7 +170,7 @@ class PostController extends BaseController
         $this->model = new CreatePostModel();
         $this->model->load(\Yii::$app->request->post(), '');
 
-        if ($this->checkIdentity() && $this->model->createPost()) {
+        if ($this->setIdentity() && $this->model->createPost()) {
             return $this->model->getSerializedPost();
         } else {
             return $this->model->getErrors();

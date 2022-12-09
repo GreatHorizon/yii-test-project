@@ -54,7 +54,7 @@ class UserController extends BaseController
         $this->model = new GetUsersForm();
         $this->model->load(\Yii::$app->request->get(), '');
 
-        if ($this->checkIdentity() && $this->model->getUsers()) {
+        if ($this->setIdentity() && $this->model->getUsers()) {
             return $this->model->serializeUsers();
         } else {
             return $this->model->getErrors();
