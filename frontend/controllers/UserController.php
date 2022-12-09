@@ -28,6 +28,7 @@ class UserController extends BaseController
      * @throws ServerErrorHttpException
      * @throws NotFoundHttpException
      * @throws InternalErrorException
+     * @throws \Throwable
      * @SWG\Get(path="user/all-users",
      *     tags={"User"},
      *     summary="Get users list",
@@ -50,15 +51,13 @@ class UserController extends BaseController
      */
     public function actionAllUsers(): array
     {
-        $model = new GetUsersForm();
-        $model->load(\Yii::$app->request->get(), '');
-        $accessToken = \Yii::$app->request->get('accessToken');
+        $this->model = new GetUsersForm();
+        $this->model->load(\Yii::$app->request->get(), '');
 
-
-        if ($this->checkIdentity($accessToken) && $model->getUsers()) {
-            return $model->serializeUsers();
+        if ($this->checkIdentity() && $this->model->getUsers()) {
+            return $this->model->serializeUsers();
         } else {
-            return $model->getErrors();
+            return $this->model->getErrors();
         }
     }
 }

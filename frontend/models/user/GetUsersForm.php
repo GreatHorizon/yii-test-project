@@ -34,8 +34,6 @@ class GetUsersForm extends Model
             return false;
         }
 
-        //can here\Yii::$app->user->getIdentity();
-
         $this->users = User::find()
             ->offset($this->offset ?? 0)
             ->limit($this->limit ?? 1000)

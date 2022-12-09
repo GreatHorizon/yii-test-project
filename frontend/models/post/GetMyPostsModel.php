@@ -2,7 +2,6 @@
 
 namespace frontend\models\post;
 
-use common\models\User;
 use yii\base\Model;
 
 class GetMyPostsModel extends Model
@@ -27,18 +26,16 @@ class GetMyPostsModel extends Model
     }
 
 
+    /**
+     * @throws \Throwable
+     */
     public function getMyPosts(): bool
     {
         if (!$this->validate()) {
             return false;
         }
 
-        $user = User::findIdentityByAccessToken($this->accessToken);
-
-        if (empty($user)) {
-            $this->addError('error', 'User not found');
-            return false;
-        }
+        $user = \Yii::$app->user->getIdentity();
 
         $this->myPosts = $user->getPosts()
             ->offset($this->offset)

@@ -5,16 +5,14 @@ namespace frontend\controllers;
 use frontend\models\post\CreatePostModel;
 use frontend\models\post\GetAllPostsModel;
 use frontend\models\post\GetMyPostsModel;
-use yii\web\Controller;
+use Symfony\Component\CssSelector\Exception\InternalErrorException;
 use yii\web\MethodNotAllowedHttpException;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
 use yii\web\ServerErrorHttpException;
 
-class PostController extends Controller
+class PostController extends BaseController
 {
-    public $enableCsrfValidation = false;
-
     public function behaviors(): array
     {
         $behaviors = parent::behaviors();
@@ -32,6 +30,8 @@ class PostController extends Controller
      * @throws MethodNotAllowedHttpException
      * @throws ServerErrorHttpException
      * @throws NotFoundHttpException
+     * @throws InternalErrorException
+     * @throws \Throwable
      * @SWG\Get(
      *     path="/post/all-posts",
      *     tags={"Post"},
@@ -67,13 +67,14 @@ class PostController extends Controller
      */
     public function actionAllPosts(): array
     {
-        $model = new GetAllPostsModel();
-        $model->load(\Yii::$app->request->get(), '');
+        $this->model = new GetAllPostsModel();
 
-        if ($model->getPosts()) {
-            return $model->serializePosts();
+        $this->model->load(\Yii::$app->request->get(), '');
+
+        if ($this->checkIdentity() && $this->model->getPosts()) {
+            return $this->model->serializePosts();
         } else {
-            return $model->getErrors();
+            return $this->model->getErrors();
         }
     }
 
@@ -81,6 +82,7 @@ class PostController extends Controller
      * @throws MethodNotAllowedHttpException
      * @throws ServerErrorHttpException
      * @throws NotFoundHttpException
+     * @throws \Throwable
      * @SWG\Get(
      *     path="/post/my-posts",
      *     tags={"Post"},
@@ -116,13 +118,13 @@ class PostController extends Controller
      */
     public function actionMyPosts(): array
     {
-        $model = new GetMyPostsModel();
-        $model->load(\Yii::$app->request->get(), '');
+        $this->model = new GetMyPostsModel();
+        $this->model->load(\Yii::$app->request->get(), '');
 
-        if ($model->getMyPosts()) {
-            return $model->serializeMyPosts();
+        if ($this->checkIdentity() && $this->model->getMyPosts()) {
+            return $this->model->serializeMyPosts();
         } else {
-            return $model->getErrors();
+            return $this->model->getErrors();
         }
     }
 
@@ -131,6 +133,7 @@ class PostController extends Controller
      * @throws MethodNotAllowedHttpException
      * @throws NotFoundHttpException
      * @throws ServerErrorHttpException
+     * @throws \Throwable
      * @SWG\Post(path="post/create-post",
      *     tags={"Post"},
      *     summary="Create new post",
@@ -164,13 +167,13 @@ class PostController extends Controller
      */
     public function actionCreatePost(): array
     {
-        $model = new CreatePostModel();
-        $model->load(\Yii::$app->request->post(), '');
+        $this->model = new CreatePostModel();
+        $this->model->load(\Yii::$app->request->post(), '');
 
-        if ($model->createPost()) {
-            return $model->getSerializedPost();
+        if ($this->checkIdentity() && $this->model->createPost()) {
+            return $this->model->getSerializedPost();
         } else {
-            return $model->getErrors();
+            return $this->model->getErrors();
         }
     }
 }

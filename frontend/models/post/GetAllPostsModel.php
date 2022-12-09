@@ -3,7 +3,6 @@
 namespace frontend\models\post;
 
 use common\models\Post;
-use common\models\User;
 use yii\base\Model;
 
 class GetAllPostsModel extends Model
@@ -28,16 +27,12 @@ class GetAllPostsModel extends Model
     }
 
 
+    /**
+     * @throws \Throwable
+     */
     public function getPosts(): bool
     {
         if (!$this->validate()) {
-            return false;
-        }
-
-        $user = User::findIdentityByAccessToken($this->accessToken);
-
-        if (empty($user)) {
-            $this->addError('error', 'User not found');
             return false;
         }
 

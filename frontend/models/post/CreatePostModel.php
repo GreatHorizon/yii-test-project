@@ -3,7 +3,6 @@
 namespace frontend\models\post;
 
 use common\models\Post;
-use common\models\User;
 use yii\base\Model;
 
 class CreatePostModel extends Model
@@ -27,18 +26,16 @@ class CreatePostModel extends Model
     }
 
 
+    /**
+     * @throws \Throwable
+     */
     public function createPost(): bool
     {
         if (!$this->validate()) {
             return false;
         }
 
-        $user = User::findIdentityByAccessToken($this->accessToken);
-
-        if (empty($user)) {
-            $this->addError('User not found');
-            return false;
-        }
+        $user = \Yii::$app->user->getIdentity();
 
         $this->post = new Post();
         $this->post->title = $this->title;

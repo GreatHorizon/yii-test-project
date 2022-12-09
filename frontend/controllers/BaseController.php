@@ -3,30 +3,39 @@
 namespace frontend\controllers;
 
 use common\models\User;
-use Symfony\Component\CssSelector\Exception\InternalErrorException;
+use yii\base\Model;
 use yii\web\Controller;
 
 abstract class BaseController extends Controller
 {
     public $enableCsrfValidation = false;
 
-    /**
-     * @throws InternalErrorException
-     */
-    public function checkIdentity($accessToken): bool
+    public Model $model;
+
+    public function checkIdentity(): bool
     {
+        $accessToken = \Yii::$app->request->get('accessToken');
+
         if (empty($accessToken)) {
-            throw new InternalErrorException('Access token not found');
+            $this->onError('Access token not found');
+            return false;
         }
 
         $user = User::findIdentityByAccessToken($accessToken);
 
         if (empty($user)) {
-            throw new InternalErrorException('User not found');
+            $this->onError('User not found');
+            return false;
         }
 
         \Yii::$app->user->setIdentity($user);
 
         return true;
+    }
+
+
+    public function onError(string $error)
+    {
+        $this->model->addError('error', $error);
     }
 }
